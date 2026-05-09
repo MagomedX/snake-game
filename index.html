@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Snake Ultimate Final</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+background:#020617;
+font-family:Arial,sans-serif;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+.hidden{display:none!important}
+.menu{
+position:fixed;
+inset:0;
+background:#020617;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:16px;
+z-index:20;
+}
+.game{
+width:min(95vw,720px);
+text-align:center;
+}
+h1{
+color:#7CFC00;
+margin-bottom:12px;
+text-shadow:0 0 20px #7CFC00;
+}
+.stats{
+display:flex;
+gap:10px;
+margin-bottom:12px;
+}
+.card{
+flex:1;
+background:#111827;
+padding:10px;
+border-radius:16px;
+}
+canvas{
+width:100%;
+aspect-ratio:1/1;
+background:#111827;
+border:4px solid #22c55e;
+border-radius:24px;
+}
+button{
+
+width:260px;
+height:64px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+border:none;
+border-radius:18px;
+
+font-size:22px;
+font-weight:bold;
+
+background:#16a34a;
+color:white;
+
+cursor:pointer;
+
+transition:0.2s;
+
+box-shadow:0 0 15px rgba(34,197,94,0.4);
+}
+
+button:hover{
+
+transform:scale(1.05);
+
+background:#22c55e;
+
+box-shadow:0 0 25px rgba(34,197,94,0.8);
+}
+
+button:active{
+
+transform:scale(0.96);
+}
+.skin-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+}
+.skin{
+width:140px;
+height:80px;
+border-radius:18px;
+border:4px solid transparent;
+font-size:20px;
+font-weight:bold;
+}
+.selected{
+border-color:white;
+box-shadow:0 0 20px white;
+}
+#msg{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:black;
+padding:30px 50px;
+border-radius:20px;
+border:2px solid #7CFC00;
+display:none;
+font-size:34px;
+z-index:100;
+}
+#achievements{
+font-size:22px;
+line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<div id="mainMenu" class="menu">
+<h1>🐍 SNAKE PRO MAX</h1>
+
+<button onclick="startGame()">▶ Играть</button>
+
+<button onclick="openShop()">🛒 Магазин</button>
+
+<button onclick="openAchievements()">🏆 Достижения</button>
+
+<button onclick="exitGameCompletely()">
+🚪 Выйти
+</button>
+
+</div>
+
+<div id="shopMenu" class="menu hidden">
+
+<h1>🛒 Магазин</h1>
+
+<div class="skin-grid">
+
+<button id="skin1" class="skin"
+style="background:#7CFC00"
+onclick="selectSkin('#7CFC00','skin1')">
+NEON
+</button>
+
+<button id="skin2" class="skin"
+style="background:#38bdf8"
+onclick="selectSkin('#38bdf8','skin2')">
+ICE
+</button>
+
+<button id="skin3" class="skin"
+style="background:#ff5500"
+onclick="selectSkin('#ff5500','skin3')">
+FIRE
+</button>
+
+<button id="skin4" class="skin"
+style="background:#facc15;color:black"
+onclick="selectSkin('#facc15','skin4')">
+GOLD
+</button>
+
+</div>
+
+<button onclick="backMenu()">⬅ Назад</button>
+
+</div>
+
+<div id="achMenu" class="menu hidden">
+
+<h1>🏆 Достижения</h1>
+
+<div id="achievements"></div>
+
+<button onclick="backMenu()">⬅ Назад</button>
+
+</div>
+
+<div id="pauseMenu" class="menu hidden">
+
+<h1>⏸ Пауза</h1>
+
+<button onclick="resumeGame()">
+▶ Продолжить
+</button>
+
+<button onclick="restartGame()">
+🔄 Restart
+</button>
+
+<button onclick="exitGame()">
+🚪 Выйти
+</button>
+
+</div>
+
+<div class="game">
+
+<h1>🐍 SNAKE PRO MAX</h1>
+
+<div class="stats">
+<div class="card"><div>Очки</div><h2 id="score">0</h2></div>
+<div class="card"><div>Уровень</div><h2 id="level">1</h2></div>
+<div class="card"><div>Комбо</div><h2 id="combo">x1</h2></div>
+<div class="card"><div>Скорость</div><h2 id="speed">9.00</h2></div>
+</div>
+
+<canvas id="game" width="720" height="720"></canvas>
+<audio id="bgMusic" loop>
+<source src="music/theme.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+
+<div id="msg"></div>
+
+<script>
+
+const canvas=document.getElementById('game');
+const ctx=canvas.getContext('2d');
+
+const box=24;
+const cells=canvas.width/box;
+
+let snake,food,dx,dy,score,level,combo,speed,foods,game,dead;
+let paused=false;
+
+let skin=localStorage.getItem('snake_skin')||'#7CFC00';
+
+let achievements = JSON.parse(
+localStorage.getItem('snake_achievements')
+) || [];
+
+function unlock(name){
+
+if(!achievements.includes(name)){
+
+achievements.push(name);
+
+localStorage.setItem(
+'snake_achievements',
+JSON.stringify(achievements)
+);
+
+showMsg('🏆 '+name);
+}
+}
+
+function updateAchievements(){
+
+const el=document.getElementById('achievements');
+
+if(achievements.length===0){
+el.innerHTML='Нет достижений';
+return;
+}
+
+el.innerHTML=achievements.join('<br>');
+}
+
+function highlightSkin(){
+
+document.querySelectorAll('.skin')
+.forEach(s=>s.classList.remove('selected'));
+
+if(skin==='#7CFC00')
+document.getElementById('skin1').classList.add('selected');
+
+if(skin==='#38bdf8')
+document.getElementById('skin2').classList.add('selected');
+
+if(skin==='#ff5500')
+document.getElementById('skin3').classList.add('selected');
+
+if(skin==='#facc15')
+document.getElementById('skin4').classList.add('selected');
+}
+
+highlightSkin();
+
+function selectSkin(color){
+
+skin=color;
+
+localStorage.setItem('snake_skin',skin);
+
+highlightSkin();
+
+showMsg('✅ Скин выбран');
+}
+
+function startGame(){
+document.getElementById('bgMusic').play();
+document.getElementById('mainMenu')
+.classList.add('hidden');
+
+init();
+}
+
+function openShop(){
+
+document.getElementById('mainMenu')
+.classList.add('hidden');
+
+document.getElementById('shopMenu')
+.classList.remove('hidden');
+}
+
+function openAchievements(){
+
+document.getElementById('mainMenu')
+.classList.add('hidden');
+
+document.getElementById('achMenu')
+.classList.remove('hidden');
+
+updateAchievements();
+}
+
+function backMenu(){
+
+document.getElementById('shopMenu')
+.classList.add('hidden');
+
+document.getElementById('achMenu')
+.classList.add('hidden');
+
+document.getElementById('mainMenu')
+.classList.remove('hidden');
+}
+
+function init(){
+
+snake=[{x:12*box,y:12*box}];
+
+food=randomFood();
+
+dx=box;
+dy=0;
+
+score=0;
+level=1;
+combo=1;
+speed=9;
+foods=0;
+dead=false;
+paused=false;
+
+updateUI();
+
+clearInterval(game);
+
+game=setInterval(draw,1000/speed);
+}
+
+function randomFood(){
+
+return{
+x:Math.floor(Math.random()*cells)*box,
+y:Math.floor(Math.random()*cells)*box
+}
+}
+
+function draw(){
+
+if(dead||paused)return;
+
+for(let i=0;i<cells;i++){
+
+for(let j=0;j<cells;j++){
+
+ctx.fillStyle=(i+j)%2===0
+?'#111827'
+:'#0f172a';
+
+ctx.fillRect(i*box,j*box,box,box);
+}
+}
+
+ctx.fillStyle='#ef4444';
+
+ctx.beginPath();
+
+ctx.arc(food.x+12,food.y+12,8,0,Math.PI*2);
+
+ctx.fill();
+
+snake.forEach((s,i)=>{
+
+ctx.fillStyle=i===0
+?skin
+:'#22c55e';
+
+ctx.fillRect(s.x,s.y,box,box);
+});
+
+let headX=snake[0].x+dx;
+let headY=snake[0].y+dy;
+
+if(headX<0)headX=canvas.width-box;
+if(headX>=canvas.width)headX=0;
+if(headY<0)headY=canvas.height-box;
+if(headY>=canvas.height)headY=0;
+
+for(let i=1;i<snake.length;i++){
+
+if(headX===snake[i].x&&headY===snake[i].y){
+
+gameOver();
+return;
+}
+}
+
+if(headX===food.x&&headY===food.y){
+
+foods++;
+
+combo=foods>=2?2:1;
+
+score+=combo;
+
+food=randomFood();
+
+const newLevel=Math.min(50,
+Math.floor(foods/10)+1);
+
+if(newLevel!==level){
+
+level=newLevel;
+
+if(level>=2){
+speed+=0.25;
+}
+
+clearInterval(game);
+
+game=setInterval(draw,1000/speed);
+
+showMsg('🚀 LEVEL '+level);
+
+if(level===10) unlock('Level 10');
+if(level===25) unlock('Level 25');
+if(level===50) unlock('Level 50');
+}
+
+}else{
+snake.pop();
+}
+
+snake.unshift({
+x:headX,
+y:headY
+});
+
+updateUI();
+}
+
+function updateUI(){
+
+document.getElementById('score')
+.innerText=score;
+
+document.getElementById('level')
+.innerText=level;
+
+document.getElementById('combo')
+.innerText='x'+combo;
+
+document.getElementById('speed')
+.innerText=speed.toFixed(2);
+}
+
+function showMsg(text){
+
+const msg=document.getElementById('msg');
+
+msg.innerText=text;
+
+msg.style.display='block';
+
+setTimeout(()=>{
+msg.style.display='none';
+},1200);
+}
+
+function gameOver(){
+
+dead=true;
+
+clearInterval(game);
+
+showMsg('💀 GAME OVER');
+
+setTimeout(()=>{
+init();
+},2000);
+}
+
+function restartGame(){
+init();
+document.getElementById('pauseMenu')
+.classList.add('hidden');
+}
+
+function resumeGame(){
+
+paused=false;
+
+document.getElementById('pauseMenu')
+.classList.add('hidden');
+}
+
+function exitGame(){
+
+clearInterval(game);
+
+paused=false;
+
+document.getElementById('pauseMenu')
+.classList.add('hidden');
+
+document.getElementById('mainMenu')
+.classList.remove('hidden');
+}
+
+
+function exitGameCompletely(){
+
+showMsg('👋 Спасибо за игру');
+
+setTimeout(()=>{
+
+window.close();
+
+location.href='about:blank';
+
+},1000);
+}
+
+
+document.addEventListener('keydown',e=>{
+
+if(e.code==='Space'){
+
+paused=!paused;
+
+document.getElementById('pauseMenu')
+.classList.toggle('hidden',!paused);
+
+return;
+}
+
+if(e.key==='ArrowLeft'&&dx===0){
+dx=-box;dy=0;
+}
+
+if(e.key==='ArrowRight'&&dx===0){
+dx=box;dy=0;
+}
+
+if(e.key==='ArrowUp'&&dy===0){
+dx=0;dy=-box;
+}
+
+if(e.key==='ArrowDown'&&dy===0){
+dx=0;dy=box;
+}
+});
+
+</script>
+
+</body>
+</html>
