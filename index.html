@@ -433,14 +433,11 @@ function startGame(){
 
 document.getElementById('bgMusic').play();
 
-function openShop(){
-
 document.getElementById('mainMenu')
-.classList.add('hidden');
+.style.display='none';
 
-document.getElementById('shopMenu')
-.classList.remove('hidden');
-}
+document.querySelector('.game')
+.style.display='flex';
 
 document.getElementById('mobileControls')
 .style.display='flex';
