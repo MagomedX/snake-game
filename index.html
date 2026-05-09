@@ -660,16 +660,16 @@ msg.style.display='none';
 
 function gameOver(){
 
-dead=true;
+dead = true;
 
 clearInterval(game);
 
 showMsg('💀 GAME OVER');
-document.getElementById('mobileControls')
-.style.display='none';
-setTimeout(()=>{
-init();
-},2000);
+
+paused = true;
+
+document.getElementById('pauseMenu')
+.classList.remove('hidden');
 }
 
 function restartGame(){
