@@ -142,23 +142,38 @@ z-index:100;
 font-size:22px;
 line-height:1.8;
 }
-  #mobileControls{
-
-position:relative;
-z-index:9999;
+ #mobileControls{
 
 margin-top:10px;
 
-display:flex;
-flex-direction:column;
+display:none;
+
+justify-content:center;
+
 align-items:center;
-gap:10px;
+
+gap:18px;
 }
 
-.mobileRow{
+#sideButtons{
 
 display:flex;
+
+flex-direction:column;
+
+gap:8px;
+}
+
+#arrows{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
 gap:6px;
+}
 }
 
 #mobileControls button{
@@ -274,13 +289,16 @@ GOLD
 </audio>
 
 <div id="mobileControls">
-<div class="mobileRow">
+
+<div id="sideButtons">
 
 <button onclick="togglePause()">⏸</button>
 
 <button onclick="restartGame()">🔄</button>
 
-</div>  
+</div>
+
+<div id="arrows">
 
 <button onclick="setDir('up')">⬆</button>
 
@@ -296,6 +314,7 @@ GOLD
 
 </div>
 
+</div>
 
 <div id="msg"></div>
 
@@ -378,6 +397,8 @@ function startGame(){
 document.getElementById('bgMusic').play();
 document.getElementById('mainMenu')
 .classList.add('hidden');
+document.getElementById('mobileControls')
+.style.display='flex';
 
 init();
 }
@@ -575,7 +596,8 @@ dead=true;
 clearInterval(game);
 
 showMsg('💀 GAME OVER');
-
+document.getElementById('mobileControls')
+.style.display='none';
 setTimeout(()=>{
 init();
 },2000);
@@ -603,7 +625,8 @@ paused=false;
 
 document.getElementById('pauseMenu')
 .classList.add('hidden');
-
+document.getElementById('mobileControls')
+.style.display='none';
 document.getElementById('mainMenu')
 .classList.remove('hidden');
 }
