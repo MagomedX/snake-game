@@ -692,10 +692,15 @@ clearInterval(game);
 
 paused=false;
 
+document.querySelector('.game')
+.style.display='none';
+
 document.getElementById('pauseMenu')
 .classList.add('hidden');
+
 document.getElementById('mobileControls')
 .style.display='none';
+
 document.getElementById('mainMenu')
 .classList.remove('hidden');
 }
@@ -705,11 +710,13 @@ function exitGameCompletely(){
 
 paused = true;
 
+document.querySelector('.game')
+.style.display='none';
+
 document.getElementById('mainMenu')
 .classList.remove('hidden');
 
 showMsg('👋 До встречи');
-
 }
 function setDir(dir){
 
