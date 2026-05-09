@@ -791,7 +791,22 @@ dx=-box;
 dy=0;
 }
 
-if(e.key
+if(e.key==='ArrowRight'&&dx===0){
+dx=box;
+dy=0;
+}
+
+if(e.key==='ArrowUp'&&dy===0){
+dx=0;
+dy=-box;
+}
+
+if(e.key==='ArrowDown'&&dy===0){
+dx=0;
+dy=box;
+}
+
+});
 
 </script>
 
