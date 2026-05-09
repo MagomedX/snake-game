@@ -393,7 +393,20 @@ let achievements = JSON.parse(
 localStorage.getItem('snake_achievements')
 ) || [];
 
+function unlock(name){
+
+if(!achievements.includes(name)){
+
+achievements.push(name);
+
+localStorage.setItem(
+'snake_achievements',
+JSON.stringify(achievements)
+);
+
 showMsg('🏆 '+name);
+
+updateAchievements();
 }
 }
 
@@ -408,7 +421,6 @@ return;
 
 el.innerHTML=achievements.join('<br>');
 }
-
 function highlightSkin(){
 
 document.querySelectorAll('.skin')
