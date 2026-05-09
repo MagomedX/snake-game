@@ -10,10 +10,17 @@ body{
 background:#020617;
 font-family:Arial,sans-serif;
 color:white;
+
 display:flex;
-justify-content:center;
+justify-content:flex-start;
 align-items:center;
-height:100vh;
+flex-direction:column;
+
+min-height:100vh;
+
+padding-top:8px;
+padding-bottom:120px;
+
 overflow:hidden;
 }
 .hidden{display:none!important}
@@ -29,7 +36,14 @@ gap:16px;
 z-index:20;
 }
 .game{
-width:min(95vw,720px);
+
+width:100%;
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+
 text-align:center;
 }
 h1{
@@ -60,7 +74,7 @@ border-radius:16px;
 canvas{
 
 width:92vw;
-max-width:420px;
+max-width:300px;
 
 aspect-ratio:1/1;
 
