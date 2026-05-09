@@ -690,15 +690,14 @@ document.getElementById('mainMenu')
 
 function exitGameCompletely(){
 
-showMsg('👋 Спасибо за игру');
+document.getElementById('mobileControls')
+.style.display='none';
 
-setTimeout(()=>{
+document.getElementById('mainMenu')
+.classList.remove('hidden');
 
-window.close();
+showMsg('👋 До встречи');
 
-location.href='about:blank';
-
-},1000);
 }
 function setDir(dir){
 
