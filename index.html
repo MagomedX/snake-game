@@ -393,22 +393,6 @@ let achievements = JSON.parse(
 localStorage.getItem('snake_achievements')
 ) || [];
 
-function startGame(){
-
-document.getElementById('bgMusic').play();
-
-document.getElementById('mainMenu')
-.classList.add('hidden');
-
-document.getElementById('mobileControls')
-.style.display='flex';
-
-updateAchievements();
-
-init();
-}
-}
-
 showMsg('🏆 '+name);
 }
 }
