@@ -422,20 +422,42 @@ return;
 el.innerHTML=achievements.join('<br>');
 }
 
-if(skin==='#7CFC00')
+function highlightSkin(){
+
+document.querySelectorAll('.skin')
+.forEach(s=>s.classList.remove('selected'));
+
+if(skin==='#7CFC00'){
 document.getElementById('skin1').classList.add('selected');
+}
 
-if(skin==='#38bdf8')
+if(skin==='#38bdf8'){
 document.getElementById('skin2').classList.add('selected');
+}
 
-if(skin==='#ff5500')
+if(skin==='#ff5500'){
 document.getElementById('skin3').classList.add('selected');
+}
 
-if(skin==='#facc15')
+if(skin==='#facc15'){
 document.getElementById('skin4').classList.add('selected');
+}
 }
 
 highlightSkin();
+
+function startGame(){
+
+document.getElementById('bgMusic').play();
+
+document.getElementById('mainMenu')
+.classList.add('hidden');
+
+document.getElementById('mobileControls')
+.style.display='flex';
+
+init();
+}
 
 function selectSkin(color){
 
@@ -464,25 +486,6 @@ showMsg('🏆 '+name);
 updateAchievements();
 }
 }
-
-function unlock(name){
-
-if(!achievements.includes(name)){
-
-achievements.push(name);
-
-localStorage.setItem(
-'snake_achievements',
-JSON.stringify(achievements)
-);
-
-showMsg('🏆 '+name);
-
-updateAchievements();
-}
-}
-
-function openShop(){
 
 document.getElementById('mainMenu')
 .classList.add('hidden');
