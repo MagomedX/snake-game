@@ -755,56 +755,7 @@ dy=box;
 }
 
 }
-function togglePause(){
 
-if(dead)return;
-
-paused=!paused;
-
-document.addEventListener('keydown',e=>{
-
-if(e.code==='Space'){
-
-function togglePause(){
-
-if(dead)return;
-
-paused=!paused;
-
-document.getElementById('pauseMenu')
-.classList.toggle('hidden',!paused);
-}
-
-document.addEventListener('keydown',e=>{
-
-if(e.code==='Space'){
-
-togglePause();
-
-return;
-}
-
-if(dead)return;
-
-if(e.key==='ArrowLeft'&&dx===0){
-dx=-box;
-dy=0;
-}
-
-if(e.key==='ArrowRight'&&dx===0){
-dx=box;
-dy=0;
-}
-
-if(e.key==='ArrowUp'&&dy===0){
-dx=0;
-dy=-box;
-}
-
-if(e.key==='ArrowDown'&&dy===0){
-dx=0;
-dy=box;
-}
 function togglePause(){
 
 if(dead)return;
@@ -813,6 +764,7 @@ paused=!paused;
 
 document.getElementById('pauseMenu')
 .classList.toggle('hidden', !paused);
+
 }
 
 document.addEventListener('keydown',e=>{
