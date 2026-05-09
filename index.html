@@ -431,7 +431,10 @@ highlightSkin();
 
 function startGame(){
 
-document.getElementById('bgMusic').play();
+const music=document.getElementById('bgMusic');
+
+music.currentTime=0;
+music.play();
 
 document.getElementById('mainMenu')
 .style.display='none';
@@ -673,11 +676,18 @@ document.getElementById('pauseMenu')
 }
 
 function restartGame(){
-init();
+
+paused=false;
+dead=false;
+
 document.getElementById('pauseMenu')
 .classList.add('hidden');
-}
 
+document.getElementById('mobileControls')
+.style.display='flex';
+
+init();
+}
 function resumeGame(){
 
 paused=false;
@@ -691,6 +701,7 @@ function exitGame(){
 clearInterval(game);
 
 paused=false;
+document.getElementById('bgMusic').pause();
 
 document.querySelector('.game')
 .style.display='none';
@@ -702,7 +713,7 @@ document.getElementById('mobileControls')
 .style.display='none';
 
 document.getElementById('mainMenu')
-.classList.remove('hidden');
+.style.display='flex';
 }
 
 
@@ -743,16 +754,13 @@ dy=box;
 }
 function togglePause(){
 
+if(dead)return;
+
 paused=!paused;
 
 document.getElementById('pauseMenu')
 .classList.toggle('hidden',!paused);
 }
-document.addEventListener('keydown',e=>{
-
-if(e.code==='Space'){
-
-paused=!paused;
 
 document.getElementById('pauseMenu')
 .classList.toggle('hidden',!paused);
