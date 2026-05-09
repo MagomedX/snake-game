@@ -127,6 +127,38 @@ z-index:100;
 font-size:22px;
 line-height:1.8;
 }
+  #mobileControls{
+
+position:relative;
+z-index:9999;
+
+margin-top:20px;
+
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+}
+
+.mobileRow{
+
+display:flex;
+gap:10px;
+}
+
+#mobileControls button{
+
+width:90px;
+height:90px;
+
+font-size:42px;
+
+border-radius:22px;
+
+pointer-events:auto;
+
+touch-action:manipulation;
+}
 </style>
 </head>
 <body>
@@ -225,6 +257,22 @@ GOLD
 <audio id="bgMusic" loop>
 <source src="theme.mp3" type="audio/mpeg">
 </audio>
+
+<div id="mobileControls">
+
+<button onclick="setDir('up')">⬆</button>
+
+<div class="mobileRow">
+
+<button onclick="setDir('left')">⬅</button>
+
+<button onclick="setDir('down')">⬇</button>
+
+<button onclick="setDir('right')">➡</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -552,7 +600,29 @@ location.href='about:blank';
 
 },1000);
 }
+function setDir(dir){
 
+if(dir==='left' && dx===0){
+dx=-box;
+dy=0;
+}
+
+if(dir==='right' && dx===0){
+dx=box;
+dy=0;
+}
+
+if(dir==='up' && dy===0){
+dx=0;
+dy=-box;
+}
+
+if(dir==='down' && dy===0){
+dx=0;
+dy=box;
+}
+
+}
 
 document.addEventListener('keydown',e=>{
 
