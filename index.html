@@ -33,9 +33,18 @@ width:min(95vw,720px);
 text-align:center;
 }
 h1{
+
 color:#7CFC00;
+
 margin-bottom:12px;
+
 text-shadow:0 0 20px #7CFC00;
+
+font-size:clamp(24px,6vw,42px);
+
+text-align:center;
+
+word-break:break-word;
 }
 .stats{
 display:flex;
@@ -265,6 +274,13 @@ GOLD
 </audio>
 
 <div id="mobileControls">
+<div class="mobileRow">
+
+<button onclick="togglePause()">⏸</button>
+
+<button onclick="restartGame()">🔄</button>
+
+</div>  
 
 <button onclick="setDir('up')">⬆</button>
 
@@ -629,7 +645,13 @@ dy=box;
 }
 
 }
+function togglePause(){
 
+paused=!paused;
+
+document.getElementById('pauseMenu')
+.classList.toggle('hidden',!paused);
+}
 document.addEventListener('keydown',e=>{
 
 if(e.code==='Space'){
