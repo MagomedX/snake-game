@@ -456,12 +456,34 @@ highlightSkin();
 showMsg('✅ Скин выбран');
 }
 
+function unlock(name){
+
+if(!achievements.includes(name)){
+
+achievements.push(name);
+
+localStorage.setItem(
+'snake_achievements',
+JSON.stringify(achievements)
+);
+
+showMsg('🏆 '+name);
+
+updateAchievements();
+}
+}
+
 function startGame(){
+
 document.getElementById('bgMusic').play();
+
 document.getElementById('mainMenu')
 .classList.add('hidden');
+
 document.getElementById('mobileControls')
 .style.display='flex';
+
+updateAchievements();
 
 init();
 }
