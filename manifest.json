@@ -1,16 +1,8 @@
 {
   "name": "Snake Pro Max",
   "short_name": "Snake",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#020617",
-  "theme_color": "#22c55e",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "theme_color": "#22c55e"
 }
